@@ -53,6 +53,15 @@ class SudokuBoard {
     }
   }
 
+  resetBoard() {
+    for(let i = 1; i <= 9; i++) {
+      for(let j = 1; j <=9; j++) {
+        this.set(i,j, "");
+      }
+    }
+    this.updateHTML;
+  }
+
   updateHTML() {
     for(let i = 1; i <= 9; i++) {
       for(let j = 1; j <= 9; j++) {
@@ -68,19 +77,20 @@ var div4table = document.getElementById("board_array");
 var initialTable = document.createElement("table");
 initialTable.className = "board_table";
 initialTable.id = "board_table";
+div4table.innerHTML = ""; // clear the explanation text
 div4table.appendChild(initialTable);
 
 for(let i = 0; i < 9; i++) {
-  var tempRow = document.createElement("tr");
+  let tempRow = document.createElement("tr");
   tempRow.className = "tableRow";
   tempRow.id = "row-" + (i+1);
 
   for(let j = 0; j < 9; j++) {
-    var tempCell = document.createElement("td");
+    let tempCell = document.createElement("td");
     tempCell.className = "tableCell";
     tempCell.id = "cell-" + (j+1) + "-" + (i+1);
 
-    var tempInput = document.createElement("input");
+    let tempInput = document.createElement("input");
     tempInput.type = "text";
     tempInput.name = "numberInput";
     tempInput.id = "input-" + (j+1) + "-" + (i+1);
@@ -90,6 +100,7 @@ for(let i = 0; i < 9; i++) {
       var grabValueRaw = document.getElementById("input-" + (j+1) + "-" + (i+1)).value;
       if(grabValueRaw.trim() == "") {
         board.set(j+1,i+1,"");
+        board.printBoard();
         return;
       }
       var grabValue = Number(grabValueRaw);
@@ -114,6 +125,7 @@ for(let i = 0; i < 9; i++) {
       var grabValueRaw = document.getElementById("input-" + (j+1) + "-" + (i+1)).value;
       if(grabValueRaw.trim() == "") {
         board.set(j+1,i+1,"");
+        board.printBoard();
         return;
       }
       var grabValue = Number(grabValueRaw);
@@ -168,12 +180,10 @@ var checkList = [
   [[1,1], [2,1], [3,1], [1,2], [2,2], [3,2], [1,3], [2,3], [3,3]], // index 18
   [[4,1], [5,1], [6,1], [4,2], [5,2], [6,2], [4,3], [5,3], [6,3]],
   [[7,1], [8,1], [9,1], [7,2], [8,2], [9,2], [7,3], [8,3], [9,3]],
-
-  [[1,4], [2,4], [3,4], [1,5], [2,5], [3,5], [1,6], [2,6], [3,6]],
+  [[1,4], [2,4], [3,4], [1,5], [2,5], [3,5], [1,6], [2,6], [3,6]], // index 21
   [[4,4], [5,4], [6,4], [4,5], [5,5], [6,5], [4,6], [5,6], [6,6]],
   [[7,4], [8,4], [9,4], [7,5], [8,5], [9,5], [7,6], [8,6], [9,6]],
-
-  [[1,7], [2,7], [3,7], [1,8], [2,8], [3,8], [1,9], [2,9], [3,9]],
+  [[1,7], [2,7], [3,7], [1,8], [2,8], [3,8], [1,9], [2,9], [3,9]], // index 24
   [[4,7], [5,7], [6,7], [4,8], [5,8], [6,8], [4,9], [5,9], [6,9]],
   [[7,7], [8,7], [9,7], [7,8], [8,8], [9,8], [7,9], [8,9], [9,9]]
 ]
@@ -212,36 +222,32 @@ function areSpotsGood(spaces) {
      //console.log("" + num2test + " shows up " + numCount + " times!");
      // Should either be 1 or 0
      if(numCount > 1) {
-       console.log("Spots are invalid! (there are " + numCount + " " + num2test + "s)");
+       //console.log("Spots are invalid! (there are " + numCount + " " + num2test + "s)");
        return false;
      }
    }
-   console.log("Spots are valid!");
+   //console.log("Spots are valid!");
    return true;
- }
+}
 
-
-// This doesn't check stuff sometimes for some reason, fix me!
+// Checks all
 function checkAll() {
  console.log("Starting checkAll()...");
  for(let i = 0; i < checkList.length; i++) {
    if(!areSpotsGood(checkList[i])) {
-     console.log("Invalid list found in checkAll (" + i +"), chart invalid.");
+     console.log("Invalid list found in checkAll [" + i +"], chart invalid.");
      return;
    }
  }
  console.log("Entire chart checks out!");
 }
 
+function reset() {
+  board.resetBoard();
+  board.printBoard();
+  board.updateHTML();
+}
 
-document.addEventListener("keydown", function(e) {
- // Tab pressed?
- if (e.keyCode == 9) {
-   checkAll();
- }
-}, false);
-
-
-// Tests
+// Init
 var board = new SudokuBoard();
 console.log("fuck");

@@ -31,10 +31,28 @@
       padding-right: 0;
       font-size: 48px;
     }
+    #sudoku_solver {
+      background-color: lightgrey;
+      width:576px;
+      height:626px;
+      align-items: center;
+    }
+    .btn-game {
+      height:22px;
+      width:100px;
+      padding:2px;
+      margin:5px;
+    }
   </style>
 </head>
 <body>
-  <div id="board_array"></div>
+  <p>Alpha: tested on MacBook Pro Retina; Firefox, Chrome, Safari</p>
+  <div id="sudoku_solver">
+    <div id="board_array">Automatically generated</div>
+    <button id="btn-check" class="btn-game" onclick="checkAll()">Check if valid</button>
+    <button id="btn-solve" class="btn-game">Solve</button>
+    <button id="btn-reset" class="btn-game" onclick="reset()">Reset</button>
+  </div>
 
   <script src="main.js"> </script>
 </body>
