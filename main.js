@@ -22,7 +22,23 @@ for(let i = 0; i < 9; i++) {
     tempInput.name = "numberInput";
     tempInput.id = "input-" + (j+1) + "-" + (i+1);
     tempInput.value = "0";
-    tempInput.style.maxlength = "1";
+    tempInput.addEventListener("keydown", function(e) {
+      var grabValueRaw = document.getElementById("input-" + (j+1) + "-" + (i+1)).value;
+      var grabValue = Number(grabValueRaw);
+      if(isNaN(grabValue)){
+        grabValue = 0;
+      }
+      if(grabValue < 0) {
+        grabValue = 0;
+      }
+      if(grabValue > 9) {
+        grabValue = 0;
+      }
+      if (e.keyCode == 13) {
+        console.log(grabValue);
+        document.getElementById("input-" + (j+1) + "-" + (i+1)).value = grabValue;
+      }
+    }, false);
     tempCell.appendChild(tempInput);
     if(j == 3 || j == 6) {
       tempCell.style.borderWidth = "1px 1px 1px 5px";
@@ -37,4 +53,3 @@ for(let i = 0; i < 9; i++) {
   }
   initialTable.appendChild(tempRow);
 }
-//
