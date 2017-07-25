@@ -7,7 +7,7 @@ class SudokuBoard {
     for(let x = 0; x < 9; x++) {
       this.content[x] = new Array(9);
       for(let y = 0; y < 9; y++) {
-        this.content[x][y] = 0;
+        this.content[x][y] = randNum();
       }
     }
   }
@@ -45,13 +45,16 @@ class SudokuBoard {
       console.log(row);
     }
   }
+
+  updateHTML() {
+    for(let i = 1; i <= 9; i++) {
+      for(let j = 1; j <= 9; j++) {
+        document.getElementById("input-" + i + "-" + j).value = this.get(i, j);
+      }
+    }
+  }
   // end of class
 }
-
-console.log("fuck");
-var board2 = new SudokuBoard();
-board2.set(3,4, 9);
-console.log(board2.get(3,4));
 
 // Construct the HTML table
 var div4table = document.getElementById("board_array");
@@ -114,4 +117,20 @@ for(let i = 0; i < 9; i++) {
     tempRow.appendChild(tempCell);
   }
   initialTable.appendChild(tempRow);
+}
+
+// Solving functions
+
+// Random number 1-9
+var randNum = function() {
+  return Math.floor(Math.random() * 9) + 1;
+}
+
+console.log("fuck");
+var board2 = new SudokuBoard();
+board2.set(3,4, 9);
+board2.updateHTML();
+
+for(let i = 0; i < 20; i++) {
+  console.log(randNum());
 }
