@@ -88,8 +88,21 @@ for(let i = 0; i < 9; i++) {
       if (e.keyCode == 13) {
         console.log(grabValue);
         document.getElementById("input-" + (j+1) + "-" + (i+1)).value = grabValue;
+        document.getElementById("input-" + (j+1) + "-" + (i+1)).blur();
       }
     }, false);
+
+    tempInput.onblur = function(){
+      var grabValueRaw = document.getElementById("input-" + (j+1) + "-" + (i+1)).value;
+      var grabValue = Number(grabValueRaw);
+      if(isNaN(grabValue))
+        grabValue = "";
+      if(grabValue < 1)
+        grabValue = "";
+      if(grabValue > 9)
+        grabValue = "";
+      document.getElementById("input-" + (j+1) + "-" + (i+1)).value = grabValue;
+    };
 
     tempCell.appendChild(tempInput);
     if(j == 3 || j == 6)
