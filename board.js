@@ -45,10 +45,11 @@ class SudokuBoard {
       console.log(row);
     }
   }
+  // end of class
 }
 
-var board = new SudokuBoard();
-board.set(3,4,9);
-board.set(4,3,8);
-console.log(board.get(3,4));
-board.printBoard();
+// var board = new SudokuBoard();
+// board.set(3,4, 9);
+// board.set(4,3, 8);
+// console.log(board.get(3,4));
+// board.printBoard();
