@@ -145,7 +145,7 @@ for(let i = 0; i < 9; i++) {
 // List of places to check
 var checkList = [
   //horizontal
-  [[1,1], [2,1], [3,1], [4,1], [5,1], [6,1], [7,1], [8,1], [9,1]],
+  [[1,1], [2,1], [3,1], [4,1], [5,1], [6,1], [7,1], [8,1], [9,1]], // index 0
   [[1,2], [2,2], [3,2], [4,2], [5,2], [6,2], [7,2], [8,2], [9,2]],
   [[1,3], [2,3], [3,3], [4,3], [5,3], [6,3], [7,3], [8,3], [9,3]],
   [[1,4], [2,4], [3,4], [4,4], [5,4], [6,4], [7,4], [8,4], [9,4]],
@@ -155,7 +155,7 @@ var checkList = [
   [[1,8], [2,8], [3,8], [4,8], [5,8], [6,8], [7,8], [8,8], [9,8]],
   [[1,9], [2,9], [3,9], [4,9], [5,9], [6,9], [7,9], [8,9], [9,9]],
   // vertical
-  [[1,1], [1,2], [1,3], [1,4], [1,5], [1,6], [1,7], [1,8], [1,9]],
+  [[1,1], [1,2], [1,3], [1,4], [1,5], [1,6], [1,7], [1,8], [1,9]], // index 9
   [[2,1], [2,2], [2,3], [2,4], [2,5], [2,6], [2,7], [2,8], [2,9]],
   [[3,1], [3,2], [3,3], [3,4], [3,5], [3,6], [3,7], [3,8], [3,9]],
   [[4,1], [4,2], [4,3], [4,4], [4,5], [4,6], [4,7], [4,8], [4,9]],
@@ -189,15 +189,18 @@ function areSpotsGood(spaces) {
          console.log("ERROR: areSpotsGood() GIVEN INVALID ARRAY (sublist!=2)");
          return;
        }
+       //console.log("Current element: " + spaces[spacePos]);
        var spotValue = board.get(spaces[spacePos][0], spaces[spacePos][1]);
        //console.log("value of grabbed spot:" + spotValue);
        if(spotValue == num2test) {
          numCount++;
        }
      }
+     //console.log(" "); // Spaces out each test
      //console.log("" + num2test + " shows up " + numCount + " times!");
-     if(numCount > 2) {
-       console.log("Spots are invalid!");
+     // Should either be 1 or 0
+     if(numCount > 1) {
+       console.log("Spots are invalid! (there are " + numCount + " " + num2test + "s)");
        return false;
      }
    }
@@ -205,26 +208,28 @@ function areSpotsGood(spaces) {
    return true;
  }
 
- function checkAll() {
-   console.log("Starting checkAll()...");
-   for(let i = 0; i < checkList.length; i++) {
-     if(!areSpotsGood(checkList[i])) {
-       console.log("Invalid list found in checkAll(), chart invalid.")
-       return;
-     }
+
+// This doesn't check stuff sometimes for some reason, fix me!
+function checkAll() {
+ console.log("Starting checkAll()...");
+ for(let i = 0; i < checkList.length; i++) {
+   if(!areSpotsGood(checkList[i])) {
+     console.log("Invalid list found in checkAll (" + i +"), chart invalid.");
+     return;
    }
-   console.log("Entire chart checks out!");
  }
+ console.log("Entire chart checks out!");
+}
 
 
- document.addEventListener("keydown", function(e) {
-   if (e.keyCode == 9) {
-     checkAll();
-   }
- }, false);
+document.addEventListener("keydown", function(e) {
+ // Tab pressed?
+ if (e.keyCode == 9) {
+   checkAll();
+ }
+}, false);
 
 
 // Tests
 var board = new SudokuBoard();
 console.log("fuck");
-board.set(3,4, 9);
