@@ -209,6 +209,12 @@ function getValAtNum(count) {
   return board.get(xPos + 1,yPos + 1);
 }
 
+function setValAtNum(count, value) {
+  var xPos = count%9;
+  var yPos = Math.floor(count/9);
+  board.set(xPos + 1,yPos + 1, value);
+}
+
 /*
  * Solving functions
  */
@@ -233,8 +239,8 @@ function areSpotsGood(spaces) {
       }
     }
     if(numCount > 1) {
-      console.log("  Count of "
-        + num2test + " greater than 1 (" + numCount + ")");
+      // console.log("  Count of "
+      //   + num2test + " greater than 1 (" + numCount + ")");
       return false;
     }
   }
@@ -243,21 +249,48 @@ function areSpotsGood(spaces) {
 
 // Checks all 1-9 rule areas
 function checkAll() {
- console.log("checkAll(): Starting...");
+ //console.log("checkAll(): Starting...");
  for(let i = 0; i < checkList.length; i++) {
    if(!areSpotsGood(checkList[i])) {
-     console.log("  Invalid array [" + i +"], board incorrect.");
-     return;
+     //console.log("  Invalid array [" + i +"], board incorrect.");
+     return false;
    }
  }
- console.log("  Entire board correct!");
+ //console.log("  Entire board correct!");
+ return true;
+}
+
+function testAt(xPos, yPos, value) {
+  if(board.get(xPos, yPos) != ""){
+    console.log("ERROR: testAt() FED FILLED TILE");
+    return;
+  }
+  board.set(xPos, yPos, value);
+  var result = checkAll();
+  board.set(xPos, yPos, ""); // set back to before, empty
+  return result;
+}
+
+function solve_recurse(posNum, num2try) {
+  // Catch to see if it got to the end
+  if(posNum > 80) {
+    console.log("Solved to end!");
+    return;
+  }
+  // First, set this number, we already checked
+  setValAtNum(posNum, num2try);
+  // Is a number already at the next place?
+  if(getValAtNum(posNum + 1) != "") {
+    solve_recurse(posNum + 2, num2try); // Skip
+    return; // Stop! Don't do the rest!
+  }
+  // Testing each number
+  solve_recurse(posNum + 1, 3);
 }
 
 // Master function for solving
 function solveSudoku() {
-  for(let i = 0; i < 81; i++) {
-    console.log(getValAtNum(i));
-  }
+  solve_recurse(0, 1);
 }
 
 /*
