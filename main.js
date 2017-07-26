@@ -202,6 +202,13 @@ function reset() {
   board.updateHTML();
 }
 
+// Gets sequential number on board
+function getValAtNum(count) {
+  var xPos = count%9;
+  var yPos = Math.floor(count/9);
+  return board.get(xPos + 1,yPos + 1);
+}
+
 /*
  * Solving functions
  */
@@ -244,6 +251,13 @@ function checkAll() {
    }
  }
  console.log("  Entire board correct!");
+}
+
+// Master function for solving
+function solveSudoku() {
+  for(let i = 0; i < 81; i++) {
+    console.log(getValAtNum(i));
+  }
 }
 
 /*
