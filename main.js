@@ -259,38 +259,49 @@ function checkAll() {
  //console.log("  Entire board correct!");
  return true;
 }
-
+// Returns true if the placement of the value works, false if not
 function testAt(xPos, yPos, value) {
+  console.log("Testing [" + xPos + ", " + yPos + "]");
   if(board.get(xPos, yPos) != ""){
-    console.log("ERROR: testAt() FED FILLED TILE");
-    return;
+    //console.log("ERROR: testAt() FED FILLED TILE (" + board.get(xPos, yPos) + ")");
+    return false;
   }
   board.set(xPos, yPos, value);
   var result = checkAll();
   board.set(xPos, yPos, ""); // set back to before, empty
   return result;
 }
-
-function solve_recurse(posNum, num2try) {
-  // Catch to see if it got to the end
-  if(posNum > 80) {
-    console.log("Solved to end!");
-    return;
-  }
-  // First, set this number, we already checked
-  setValAtNum(posNum, num2try);
-  // Is a number already at the next place?
-  if(getValAtNum(posNum + 1) != "") {
-    solve_recurse(posNum + 2, num2try); // Skip
-    return; // Stop! Don't do the rest!
-  }
-  // Testing each number
-  solve_recurse(posNum + 1, 3);
+// testAt() encapsulation for single number positioning
+function testAtNum(numPos, value) {
+  var xPos = numPos%9;
+  var yPos = Math.floor(numPos/9);
+  return testAt(xPos+1, yPos+1, value);
 }
 
 // Master function for solving
 function solveSudoku() {
   solve_recurse(0, 1);
+}
+
+
+function solve_recurse(numPos, num2test) {
+  // Catch to see if it got to the end
+  if(numPos > 80) {
+    console.log("Solved to end!");
+    return;
+  }
+  // If a number is already present, skip it
+  if(getValAtNum(numPos) != "") {
+    console.log("Number already present at " + numPos + ", skipping...");
+    solve_recurse(numPos + 1, num2test);
+  }
+
+  for(let i = 1; i <= 9; i++) {
+    if(testAtNum(numPos, i) == true) {
+      setValAtNum(numPos, i);
+      solve_recurse(numPos + 1, i);
+    }
+  }
 }
 
 /*
