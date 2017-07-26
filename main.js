@@ -1,7 +1,6 @@
-'use strict';
+'use strict'; // Ensure good practices
 class SudokuBoard {
   constructor() {
-    // Create board filled with 0s
     this.filled = 0;
     this.content = new Array(9);
     for(let x = 0; x < 9; x++) {
@@ -26,6 +25,11 @@ class SudokuBoard {
   }
 
   set(x,y,val) {
+    this.set_noHTML(x,y,val);
+    this.updateHTML();
+  }
+
+  set_noHTML(x,y,val) {
     if(val == "") {
       this.content[y-1][x-1] = "";
       return;
@@ -39,7 +43,6 @@ class SudokuBoard {
       return -1;
     }
     this.content[y-1][x-1] = val;
-    this.updateHTML();
   }
 
   // Print locally to console log versus HTML
@@ -73,6 +76,7 @@ class SudokuBoard {
 }
 
 // Construct the HTML table
+// Note: not encapsulated with a function, use "let" instead of "var" in loops
 var div4table = document.getElementById("board_array");
 var initialTable = document.createElement("table");
 initialTable.className = "board_table";
@@ -97,10 +101,11 @@ for(let i = 0; i < 9; i++) {
     tempInput.value = "";
     // Fix or report upon pressing enter
     tempInput.addEventListener("keydown", function(e) {
-      var grabValueRaw = document.getElementById("input-" + (j+1) + "-" + (i+1)).value;
+      var grabValueRaw = document.getElementById("input-"
+        + (j+1) + "-" + (i+1)).value;
       if(grabValueRaw.trim() == "") {
         board.set(j+1,i+1,"");
-        board.printBoard();
+        //board.printBoard();
         return;
       }
       var grabValue = Number(grabValueRaw);
@@ -111,21 +116,22 @@ for(let i = 0; i < 9; i++) {
       if(grabValue > 9)
         grabValue = "";
       if (e.keyCode == 13) {
-        console.log(grabValue);
-        document.getElementById("input-" + (j+1) + "-" + (i+1)).value = grabValue;
+        document.getElementById("input-"
+          + (j+1) + "-" + (i+1)).value = grabValue;
         document.getElementById("input-" + (j+1) + "-" + (i+1)).blur();
         if(!isNaN(grabValue)) {
           board.set(j+1,i+1, grabValue); // update board array
-          board.printBoard();
+          //board.printBoard();
         }
       }
     }, false);
     // When deselected, fix
     tempInput.onblur = function(){
-      var grabValueRaw = document.getElementById("input-" + (j+1) + "-" + (i+1)).value;
+      var grabValueRaw = document.getElementById("input-"
+        + (j+1) + "-" + (i+1)).value;
       if(grabValueRaw.trim() == "") {
         board.set(j+1,i+1,"");
-        board.printBoard();
+        //board.printBoard();
         return;
       }
       var grabValue = Number(grabValueRaw);
@@ -135,10 +141,11 @@ for(let i = 0; i < 9; i++) {
         grabValue = "";
       if(grabValue > 9)
         grabValue = "";
-      document.getElementById("input-" + (j+1) + "-" + (i+1)).value = grabValue;
+      document.getElementById("input-"
+        + (j+1) + "-" + (i+1)).value = grabValue;
       if(!isNaN(grabValue)) {
         board.set(j+1,i+1, grabValue); // update board array
-        board.printBoard();
+        //board.printBoard();
       }
     }
 
@@ -188,66 +195,59 @@ var checkList = [
   [[7,7], [8,7], [9,7], [7,8], [8,8], [9,8], [7,9], [8,9], [9,9]]
 ]
 
-/*
- * Solving functions
- */
-// Given a array of pairs, see if there is either 0 or 1 of each number
-function areSpotsGood(spaces) {
-  console.log("\nBEGINNING CHECK\n")
-  //  if(spaces.constructor === Array) {
-  //    console.log("ERROR: areSpotsGood() NOT GIVEN ARRAY");
-  //    return;
-  //  } ^ This stopped working for some dumbass reason
-   if(spaces.length != 9 || typeof spaces === 'string'){
-     console.log("ERROR: areSpotsGood() INVALID TYPE/COUNT!=9)");
-     return;
-   }
-   for(var num2test = 1; num2test <= 9; num2test++) {
-     let numCount = 0;
-     //console.log("checking number " + num2test + "...");
-     for(let spacePos = 0; spacePos < 9; spacePos++) {
-       // Check if each array element is a pair
-       if(spaces[spacePos].length != 2) {
-         console.log("ERROR: areSpotsGood() GIVEN INVALID ARRAY (sublist!=2)");
-         return;
-       }
-       //console.log("Current element: " + spaces[spacePos]);
-       var spotValue = board.get(spaces[spacePos][0], spaces[spacePos][1]);
-       //console.log("value of grabbed spot:" + spotValue);
-       if(spotValue == num2test) {
-         numCount++;
-       }
-     }
-     //console.log(" "); // Spaces out each test
-     //console.log("" + num2test + " shows up " + numCount + " times!");
-     // Should either be 1 or 0
-     if(numCount > 1) {
-       //console.log("Spots are invalid! (there are " + numCount + " " + num2test + "s)");
-       return false;
-     }
-   }
-   //console.log("Spots are valid!");
-   return true;
-}
-
-// Checks all
-function checkAll() {
- console.log("Starting checkAll()...");
- for(let i = 0; i < checkList.length; i++) {
-   if(!areSpotsGood(checkList[i])) {
-     console.log("Invalid list found in checkAll [" + i +"], chart invalid.");
-     return;
-   }
- }
- console.log("Entire chart checks out!");
-}
-
+// Wipes board
 function reset() {
   board.resetBoard();
-  board.printBoard();
+  //board.printBoard();
   board.updateHTML();
 }
 
-// Init
+/*
+ * Solving functions
+ */
+
+// Given a array of pairs, see if there is either 0 or 1 of each number
+function areSpotsGood(spaces) {
+  if(spaces.length != 9 || typeof spaces === 'string'){
+    console.log("ERROR: areSpotsGood() INVALID TYPE/COUNT!=9)");
+    return;
+  }
+  for(var num2test = 1; num2test <= 9; num2test++) {
+    let numCount = 0;
+    for(let spacePos = 0; spacePos < 9; spacePos++) {
+      // Check if each array element is a pair
+      if(spaces[spacePos].length != 2) {
+        console.log("ERROR: areSpotsGood() GIVEN INVALID ARRAY (sublist!=2)");
+        return;
+      }
+      let spotValue = board.get(spaces[spacePos][0], spaces[spacePos][1]);
+      if(spotValue == num2test) {
+        numCount++;
+      }
+    }
+    if(numCount > 1) {
+      console.log("  Count of "
+        + num2test + " greater than 1 (" + numCount + ")");
+      return false;
+    }
+  }
+  return true;
+}
+
+// Checks all 1-9 rule areas
+function checkAll() {
+ console.log("checkAll(): Starting...");
+ for(let i = 0; i < checkList.length; i++) {
+   if(!areSpotsGood(checkList[i])) {
+     console.log("  Invalid array [" + i +"], board incorrect.");
+     return;
+   }
+ }
+ console.log("  Entire board correct!");
+}
+
+/*
+ * Initialize
+ */
+
 var board = new SudokuBoard();
-console.log("fuck");
