@@ -262,7 +262,7 @@ function checkAll() {
 }
 // Returns true if the placement of the value works, false if not
 function testAt(xPos, yPos, value) {
-  console.log("Testing [" + xPos + ", " + yPos + "]");
+  //console.log("Testing [" + xPos + ", " + yPos + "]");
   if(board.get(xPos, yPos) != ""){
     //console.log("ERROR: testAt() FED FILLED TILE (" + board.get(xPos, yPos) + ")");
     return false;
@@ -280,6 +280,17 @@ function testAtNum(numPos, value) {
 }
 // Master function for solving
 function solveSudoku() {
+  var isFilled = true;
+  for(let i = 0; i < 81; i++) {
+    if(getValAtNum(i) == "") {
+      isFilled = false;
+      break;
+    }
+  }
+  if(isFilled) {
+    alert("Graph is already full");
+    return;
+  }
   document.getElementById("sudoku_solver").style.color = "lightgrey";
   var list = document.getElementsByClassName("input-box");
   for(let i = 0; i < list.length; i++) {
@@ -304,9 +315,11 @@ function solve_recurse(numPos) {
     console.log("Solved to end!");
     return true;
   }
+  // Ensure this isn't on a filled square
   while(getValAtNum(numPos) != "") {
     numPos++;
   }
+  // ensure next one isn't on a filled square
   var nextPos = numPos + 1;
   while(getValAtNum(nextPos) != "") {
     //console.log("Skipping...");
@@ -340,6 +353,7 @@ function solve_recurse(numPos) {
  */
 
 var board = new SudokuBoard();
+// Partly solved one
 board.set(1,1, 3);board.set(3,1, 5);board.set(4,1, 6);board.set(5,1, 4);
 board.set(6,1, 8);board.set(8,1, 1);board.set(1,2, 2);board.set(2,2, 1);
 board.set(8,2, 4);board.set(5,3, 2);board.set(2,4, 3);board.set(4,4, 8);
