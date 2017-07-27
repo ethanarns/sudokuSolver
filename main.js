@@ -98,6 +98,7 @@ for(let i = 0; i < 9; i++) {
     tempInput.type = "text";
     tempInput.name = "numberInput";
     tempInput.id = "input-" + (j+1) + "-" + (i+1);
+    tempInput.className = "input-box";
     tempInput.value = "";
     // Fix or report upon pressing enter
     tempInput.addEventListener("keydown", function(e) {
@@ -277,33 +278,61 @@ function testAtNum(numPos, value) {
   var yPos = Math.floor(numPos/9);
   return testAt(xPos+1, yPos+1, value);
 }
-
 // Master function for solving
 function solveSudoku() {
-  if(solve_recurse(0, 1)) {
-    console.log("True returned!");
+  document.getElementById("sudoku_solver").style.color = "lightgrey";
+  var list = document.getElementsByClassName("input-box");
+  for(let i = 0; i < list.length; i++) {
+    list[i].style.color = "lightgrey";
   }
+  var solver = window.setTimeout(function() {
+    solve_recurse(0);
+  },100);
+  var resetter = window.setTimeout(function() {
+    document.getElementById("sudoku_solver").style.color = "black";
+    for(let i = 0; i < list.length; i++) {
+      list[i].style.color = "black";
+    }
+  }, 150);
 }
 
 // returns true if reached end, if reaches point which nothing works, false
-function solve_recurse(numPos, num2test) {
-  console.log("Testing at " + numPos + "...");
+function solve_recurse(numPos) {
+  //console.log("Testing at " + numPos + "...");
   // Catch to see if it got to the end
   if(numPos > 80) {
     console.log("Solved to end!");
     return true;
   }
+  while(getValAtNum(numPos) != "") {
+    numPos++;
+  }
   var nextPos = numPos + 1;
   while(getValAtNum(nextPos) != "") {
-    console.log("Skipping...");
-    nextPos++;
+    //console.log("Skipping...");
     if(nextPos > 80) {
-      console.log("Solved to end!");
+      break;
+    }
+    nextPos++;
+  }
+
+  for(let i = 1; i <= 9; i++) {
+    let works = testAtNum(numPos, i);
+    if(!works) {
+      //console.log("" + i + " doesn't work, doing next...");
+      continue;
+    }
+    //console.log("" + i + "works!");
+    setValAtNum(numPos, i);
+    let solved = solve_recurse(numPos + 1);
+    if(solved) {
       return true;
     }
+    else {
+      setValAtNum(numPos, "");
+    }
   }
-  // https://codefordummies.blogspot.com/2014/01/backtracking-solve-sudoku-in-java.html
-  // Do this later
+  return false;
 }
 
 /*
