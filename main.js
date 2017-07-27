@@ -280,28 +280,30 @@ function testAtNum(numPos, value) {
 
 // Master function for solving
 function solveSudoku() {
-  solve_recurse(0, 1);
+  if(solve_recurse(0, 1)) {
+    console.log("True returned!");
+  }
 }
 
-
+// returns true if reached end, if reaches point which nothing works, false
 function solve_recurse(numPos, num2test) {
+  console.log("Testing at " + numPos + "...");
   // Catch to see if it got to the end
   if(numPos > 80) {
     console.log("Solved to end!");
-    return;
+    return true;
   }
-  // If a number is already present, skip it
-  if(getValAtNum(numPos) != "") {
-    console.log("Number already present at " + numPos + ", skipping...");
-    solve_recurse(numPos + 1, num2test);
-  }
-
-  for(let i = 1; i <= 9; i++) {
-    if(testAtNum(numPos, i) == true) {
-      setValAtNum(numPos, i);
-      solve_recurse(numPos + 1, i);
+  var nextPos = numPos + 1;
+  while(getValAtNum(nextPos) != "") {
+    console.log("Skipping...");
+    nextPos++;
+    if(nextPos > 80) {
+      console.log("Solved to end!");
+      return true;
     }
   }
+  // https://codefordummies.blogspot.com/2014/01/backtracking-solve-sudoku-in-java.html
+  // Do this later
 }
 
 /*
