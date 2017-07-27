@@ -213,7 +213,7 @@ function getValAtNum(count) {
 function setValAtNum(count, value) {
   var xPos = count%9;
   var yPos = Math.floor(count/9);
-  board.set(xPos + 1,yPos + 1, value);
+  board.set_noHTML(xPos + 1,yPos + 1, value);
 }
 
 /*
@@ -305,6 +305,7 @@ function solveSudoku() {
       list[i].style.color = "black";
     }
   }, 150);
+  board.updateHTML();
 }
 
 // returns true if reached end, if reaches point which nothing works, false
