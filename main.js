@@ -205,6 +205,9 @@ function reset() {
 
 // Gets sequential number on board
 function getValAtNum(count) {
+  if(count >= 80) {
+    console.log("ERROR: getValAtNum() OUT OF BOUNDS (" + count + ")");
+  }
   var xPos = count%9;
   var yPos = Math.floor(count/9);
   return board.get(xPos + 1,yPos + 1);
@@ -315,12 +318,13 @@ function solve_recurse(numPos) {
   // Ensure this isn't on a filled square
   if(numPos>80) {
     console.log("COMPLETE!");
+    // Do last place if taken
     return true;
   }
   while(getValAtNum(numPos) != "") {
     // Catch to see if it got to the end
     if(numPos >= 80) {
-      break;
+      return true;
     }
     numPos++;
   }
@@ -342,6 +346,7 @@ function solve_recurse(numPos) {
       setValAtNum(numPos, "");
     }
   }
+  //console.log("Returned false, nothing worked");
   return false;
 }
 
