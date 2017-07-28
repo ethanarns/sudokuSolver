@@ -267,9 +267,9 @@ function testAt(xPos, yPos, value) {
     //console.log("ERROR: testAt() FED FILLED TILE (" + board.get(xPos, yPos) + ")");
     return false;
   }
-  board.set(xPos, yPos, value);
+  board.set_noHTML(xPos, yPos, value);
   var result = checkAll();
-  board.set(xPos, yPos, ""); // set back to before, empty
+  board.set_noHTML(xPos, yPos, ""); // set back to before, empty
   return result;
 }
 // testAt() encapsulation for single number positioning
@@ -314,7 +314,7 @@ function solve_recurse(numPos) {
   //console.log("Testing at " + numPos + "...");
   // Ensure this isn't on a filled square
   if(numPos>80) {
-    console.log(numPos);
+    console.log("COMPLETE!");
     return true;
   }
   while(getValAtNum(numPos) != "") {
