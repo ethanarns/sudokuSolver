@@ -304,6 +304,7 @@ function solveSudoku() {
     for(let i = 0; i < list.length; i++) {
       list[i].style.color = "black";
     }
+    board.updateHTML();
   }, 150);
   board.updateHTML();
 }
@@ -311,24 +312,19 @@ function solveSudoku() {
 // returns true if reached end, if reaches point which nothing works, false
 function solve_recurse(numPos) {
   //console.log("Testing at " + numPos + "...");
-  // Catch to see if it got to the end
-  if(numPos > 80) {
-    console.log("Solved to end!");
+  // Ensure this isn't on a filled square
+  if(numPos>80) {
+    console.log(numPos);
     return true;
   }
-  // Ensure this isn't on a filled square
   while(getValAtNum(numPos) != "") {
+    // Catch to see if it got to the end
+    if(numPos >= 80) {
+      break;
+    }
     numPos++;
   }
   // ensure next one isn't on a filled square
-  var nextPos = numPos + 1;
-  while(getValAtNum(nextPos) != "") {
-    //console.log("Skipping...");
-    if(nextPos > 80) {
-      break;
-    }
-    nextPos++;
-  }
 
   for(let i = 1; i <= 9; i++) {
     let works = testAtNum(numPos, i);
