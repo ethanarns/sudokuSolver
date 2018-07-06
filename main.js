@@ -1,7 +1,10 @@
 'use strict'; // Ensure good practices
+
 class SudokuBoard {
+  
   constructor() {
     this.filled = 0;
+    // Create 2D array "content" to hold values, not the HTML
     this.content = new Array(9);
     for(let x = 0; x < 9; x++) {
       this.content[x] = new Array(9);
@@ -64,7 +67,8 @@ class SudokuBoard {
     }
     this.updateHTML;
   }
-
+  
+  // When transferred to prettier client, change this first!
   updateHTML() {
     for(let i = 1; i <= 9; i++) {
       for(let j = 1; j <= 9; j++) {
@@ -74,93 +78,6 @@ class SudokuBoard {
   }
   // end of class
 }
-
-// Construct the HTML table
-// Note: not encapsulated with a function, use "let" instead of "var" in loops
-var div4table = document.getElementById("board_array");
-var initialTable = document.createElement("table");
-initialTable.className = "board_table";
-initialTable.id = "board_table";
-div4table.innerHTML = ""; // clear the explanation text
-div4table.appendChild(initialTable);
-
-for(let i = 0; i < 9; i++) {
-  let tempRow = document.createElement("tr");
-  tempRow.className = "tableRow";
-  tempRow.id = "row-" + (i+1);
-
-  for(let j = 0; j < 9; j++) {
-    let tempCell = document.createElement("td");
-    tempCell.className = "tableCell";
-    tempCell.id = "cell-" + (j+1) + "-" + (i+1);
-
-    let tempInput = document.createElement("input");
-    tempInput.type = "text";
-    tempInput.name = "numberInput";
-    tempInput.id = "input-" + (j+1) + "-" + (i+1);
-    tempInput.className = "input-box";
-    tempInput.value = "";
-    // Fix or report upon pressing enter
-    tempInput.addEventListener("keydown", function(e) {
-      var grabValueRaw = document.getElementById("input-"
-        + (j+1) + "-" + (i+1)).value;
-      if(grabValueRaw.trim() == "") {
-        board.set(j+1,i+1,"");
-        //board.printBoard();
-        return;
-      }
-      var grabValue = Number(grabValueRaw);
-      if(isNaN(grabValue))
-        grabValue = "";
-      if(grabValue < 1)
-        grabValue = "";
-      if(grabValue > 9)
-        grabValue = "";
-      if (e.keyCode == 13) {
-        document.getElementById("input-"
-          + (j+1) + "-" + (i+1)).value = grabValue;
-        document.getElementById("input-" + (j+1) + "-" + (i+1)).blur();
-        if(!isNaN(grabValue)) {
-          board.set(j+1,i+1, grabValue); // update board array
-          //board.printBoard();
-        }
-      }
-    }, false);
-    // When deselected, fix
-    tempInput.onblur = function(){
-      var grabValueRaw = document.getElementById("input-"
-        + (j+1) + "-" + (i+1)).value;
-      if(grabValueRaw.trim() == "") {
-        board.set(j+1,i+1,"");
-        //board.printBoard();
-        return;
-      }
-      var grabValue = Number(grabValueRaw);
-      if(isNaN(grabValue))
-        grabValue = "";
-      if(grabValue < 1)
-        grabValue = "";
-      if(grabValue > 9)
-        grabValue = "";
-      document.getElementById("input-"
-        + (j+1) + "-" + (i+1)).value = grabValue;
-      if(!isNaN(grabValue)) {
-        board.set(j+1,i+1, grabValue); // update board array
-        //board.printBoard();
-      }
-    }
-
-    tempCell.appendChild(tempInput);
-    if(j == 3 || j == 6)
-      tempCell.style.borderWidth = "1px 1px 1px 5px";
-    if(i == 3 || i == 6)
-      tempCell.style.borderWidth = "5px 1px 1px 1px";
-    if( (i == 3 || i == 6) && (j == 3 || j == 6) )
-      tempCell.style.borderWidth = "5px 1px 1px 5px";
-    tempRow.appendChild(tempCell);
-  }
-  initialTable.appendChild(tempRow);
-} // HTML table constructed!
 
 // List of places to check
 var checkList = [
@@ -188,10 +105,10 @@ var checkList = [
   [[1,1], [2,1], [3,1], [1,2], [2,2], [3,2], [1,3], [2,3], [3,3]], // index 18
   [[4,1], [5,1], [6,1], [4,2], [5,2], [6,2], [4,3], [5,3], [6,3]],
   [[7,1], [8,1], [9,1], [7,2], [8,2], [9,2], [7,3], [8,3], [9,3]],
-  [[1,4], [2,4], [3,4], [1,5], [2,5], [3,5], [1,6], [2,6], [3,6]], // index 21
+  [[1,4], [2,4], [3,4], [1,5], [2,5], [3,5], [1,6], [2,6], [3,6]],
   [[4,4], [5,4], [6,4], [4,5], [5,5], [6,5], [4,6], [5,6], [6,6]],
   [[7,4], [8,4], [9,4], [7,5], [8,5], [9,5], [7,6], [8,6], [9,6]],
-  [[1,7], [2,7], [3,7], [1,8], [2,8], [3,8], [1,9], [2,9], [3,9]], // index 24
+  [[1,7], [2,7], [3,7], [1,8], [2,8], [3,8], [1,9], [2,9], [3,9]],
   [[4,7], [5,7], [6,7], [4,8], [5,8], [6,8], [4,9], [5,9], [6,9]],
   [[7,7], [8,7], [9,7], [7,8], [8,8], [9,8], [7,9], [8,9], [9,9]]
 ]
@@ -312,7 +229,7 @@ function solveSudoku() {
   board.updateHTML();
 }
 
-// returns true if reached end, if reaches point which nothing works, false
+// Returns true if reached end, if reaches point which nothing works, false
 function solve_recurse(numPos) {
   //console.log("Testing at " + numPos + "...");
   // Ensure this isn't on a filled square
@@ -350,12 +267,103 @@ function solve_recurse(numPos) {
   return false;
 }
 
+
 /*
- * Initialize
+ * Initialize; mostly irrelevant from solver
  */
 
+// Construct the HTML table
+// Note: not encapsulated with a function, use "let" instead of "var" in loops
+var div4table = document.getElementById("board_array");
+var initialTable = document.createElement("table");
+initialTable.className = "board_table";
+initialTable.id = "board_table";
+div4table.innerHTML = ""; // clear the explanation text
+div4table.appendChild(initialTable);
+
+for(let i = 0; i < 9; i++) {
+  let tempRow = document.createElement("tr");
+  tempRow.className = "tableRow";
+  tempRow.id = "row-" + (i+1);
+
+  for(let j = 0; j < 9; j++) {
+    let tempCell = document.createElement("td");
+    tempCell.className = "tableCell";
+    tempCell.id = "cell-" + (j+1) + "-" + (i+1);
+
+    let tempInput = document.createElement("input");
+    tempInput.type = "text";
+    tempInput.name = "numberInput";
+    tempInput.id = "input-" + (j+1) + "-" + (i+1);
+    tempInput.className = "input-box";
+    tempInput.value = "";
+    
+    // Fix or report upon pressing enter
+    tempInput.addEventListener("keydown", function(e) {
+      var grabValueRaw = document.getElementById("input-"
+        + (j+1) + "-" + (i+1)).value;
+      if(grabValueRaw.trim() == "") {
+        board.set(j+1,i+1,"");
+        //board.printBoard();
+        return;
+      }
+      var grabValue = Number(grabValueRaw);
+      if(isNaN(grabValue))
+        grabValue = "";
+      if(grabValue < 1)
+        grabValue = "";
+      if(grabValue > 9)
+        grabValue = "";
+      if (e.keyCode == 13) {
+        document.getElementById("input-"
+          + (j+1) + "-" + (i+1)).value = grabValue;
+        document.getElementById("input-" + (j+1) + "-" + (i+1)).blur();
+        if(!isNaN(grabValue)) {
+          board.set(j+1,i+1, grabValue); // update board array
+          //board.printBoard();
+        }
+      }
+    }, false);
+    // When deselected, fix
+    tempInput.onblur = function(){
+      var grabValueRaw = document.getElementById("input-"
+        + (j+1) + "-" + (i+1)).value;
+      if(grabValueRaw.trim() == "") {
+        board.set(j+1,i+1,"");
+        //board.printBoard();
+        return;
+      }
+      var grabValue = Number(grabValueRaw);
+      if(isNaN(grabValue))
+        grabValue = "";
+      if(grabValue < 1)
+        grabValue = "";
+      if(grabValue > 9)
+        grabValue = "";
+      document.getElementById("input-"
+        + (j+1) + "-" + (i+1)).value = grabValue;
+      if(!isNaN(grabValue)) {
+        board.set(j+1,i+1, grabValue); // update board array
+        //board.printBoard();
+      }
+    }
+
+    tempCell.appendChild(tempInput);
+    if(j == 3 || j == 6)
+      tempCell.style.borderWidth = "1px 1px 1px 5px";
+    if(i == 3 || i == 6)
+      tempCell.style.borderWidth = "5px 1px 1px 1px";
+    if( (i == 3 || i == 6) && (j == 3 || j == 6) )
+      tempCell.style.borderWidth = "5px 1px 1px 5px";
+    tempRow.appendChild(tempCell);
+  }
+  initialTable.appendChild(tempRow);
+} // HTML table constructed!
+
+// Create master board class
 var board = new SudokuBoard();
-// Partly solved one
+
+// Partly solved one as example
 board.set(1,1, 3);board.set(3,1, 5);board.set(4,1, 6);board.set(5,1, 4);
 board.set(6,1, 8);board.set(8,1, 1);board.set(1,2, 2);board.set(2,2, 1);
 board.set(8,2, 4);board.set(5,3, 2);board.set(2,4, 3);board.set(4,4, 8);
