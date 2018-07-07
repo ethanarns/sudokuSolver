@@ -48,7 +48,7 @@ class SudokuBoard {
     this.content[y-1][x-1] = val;
   }
 
-  // Print locally to console log versus HTML
+  // Print board to *console log*, not HTML
   printBoard() {
     for(let x = 1; x <= 9; x++) {
       var row = [];
@@ -211,14 +211,19 @@ function solveSudoku() {
     alert("Graph is already full");
     return;
   }
+  
+  // Set numbers to grey
   document.getElementById("sudoku_solver").style.color = "lightgrey";
   var list = document.getElementsByClassName("input-box");
   for(let i = 0; i < list.length; i++) {
     list[i].style.color = "lightgrey";
   }
+  
   var solver = window.setTimeout(function() {
     solve_recurse(0);
   },100);
+  
+  // Return numbers
   var resetter = window.setTimeout(function() {
     document.getElementById("sudoku_solver").style.color = "black";
     for(let i = 0; i < list.length; i++) {
@@ -226,6 +231,7 @@ function solveSudoku() {
     }
     board.updateHTML();
   }, 150);
+  
   board.updateHTML();
 }
 
@@ -269,7 +275,7 @@ function solve_recurse(numPos) {
 
 
 /*
- * Initialize; mostly irrelevant from solver
+ * Initialize; entirely separate from solver
  */
 
 // Construct the HTML table
@@ -363,7 +369,7 @@ for(let i = 0; i < 9; i++) {
 // Create master board class
 var board = new SudokuBoard();
 
-// Partly solved one as example
+// Create partly solved one as example
 board.set(1,1, 3);board.set(3,1, 5);board.set(4,1, 6);board.set(5,1, 4);
 board.set(6,1, 8);board.set(8,1, 1);board.set(1,2, 2);board.set(2,2, 1);
 board.set(8,2, 4);board.set(5,3, 2);board.set(2,4, 3);board.set(4,4, 8);
