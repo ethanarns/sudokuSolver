@@ -1,7 +1,7 @@
 'use strict'; // Ensure good practices
 
 class SudokuBoard {
-  
+
   constructor() {
     this.filled = 0;
     // Create 2D array "content" to hold values, not the HTML
@@ -67,7 +67,7 @@ class SudokuBoard {
     }
     this.updateHTML;
   }
-  
+
   // When transferred to prettier client, change this first!
   updateHTML() {
     for(let i = 1; i <= 9; i++) {
@@ -180,6 +180,7 @@ function checkAll() {
  //console.log("  Entire board correct!");
  return true;
 }
+
 // Returns true if the placement of the value works, false if not
 function testAt(xPos, yPos, value) {
   //console.log("Testing [" + xPos + ", " + yPos + "]");
@@ -192,12 +193,14 @@ function testAt(xPos, yPos, value) {
   board.set_noHTML(xPos, yPos, ""); // set back to before, empty
   return result;
 }
+
 // testAt() encapsulation for single number positioning
 function testAtNum(numPos, value) {
   var xPos = numPos%9;
   var yPos = Math.floor(numPos/9);
   return testAt(xPos+1, yPos+1, value);
 }
+
 // Master function for solving
 function solveSudoku() {
   var isFilled = true;
@@ -211,28 +214,44 @@ function solveSudoku() {
     alert("Graph is already full");
     return;
   }
-  
-  // Set numbers to grey
-  document.getElementById("sudoku_solver").style.color = "lightgrey";
-  var list = document.getElementsByClassName("input-box");
-  for(let i = 0; i < list.length; i++) {
-    list[i].style.color = "lightgrey";
-  }
-  
+
+  // Set elements to grey
+  fadeElements(true);
+
   var solver = window.setTimeout(function() {
     solve_recurse(0);
   },100);
-  
-  // Return numbers
+
+  // Return elements to black
   var resetter = window.setTimeout(function() {
-    document.getElementById("sudoku_solver").style.color = "black";
-    for(let i = 0; i < list.length; i++) {
-      list[i].style.color = "black";
-    }
+    fadeElements(false);
     board.updateHTML();
   }, 150);
-  
+
   board.updateHTML();
+}
+
+// A function encapulating
+function fadeElements(shouldFade) {
+  var numbersId = "sudoku_solver";
+  var lineClass = "input-box";
+  var fadeColor = "lightgrey";
+  var normalColor = "black";
+
+  var list = document.getElementsByClassName(lineClass);
+
+  if(shouldFade) {
+    document.getElementById(numbersId).style.color = fadeColor;
+    for(let i = 0; i < list.length; i++) {
+      list[i].style.color = fadeColor;
+    }
+  }
+  else {
+    document.getElementById(numbersId).style.color = normalColor;
+    for(let i = 0; i < list.length; i++) {
+      list[i].style.color = normalColor;
+    }
+  }
 }
 
 // Returns true if reached end, if reaches point which nothing works, false
@@ -303,7 +322,7 @@ for(let i = 0; i < 9; i++) {
     tempInput.id = "input-" + (j+1) + "-" + (i+1);
     tempInput.className = "input-box";
     tempInput.value = "";
-    
+
     // Fix or report upon pressing enter
     tempInput.addEventListener("keydown", function(e) {
       var grabValueRaw = document.getElementById("input-"
